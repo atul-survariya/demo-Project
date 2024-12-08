@@ -1,4 +1,4 @@
-package models;
+package com.scaler.demo.models;
 
 import lombok.Getter;
 import lombok.Setter;

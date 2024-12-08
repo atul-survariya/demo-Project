@@ -1,4 +1,4 @@
-package models;
+package com.scaler.demo.models;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,10 +7,11 @@ import lombok.Setter;
 @Setter
 public class Product {
     private Long id;
+    private String title;
     private String name;
     private String description;
     private double price;
-    private String image;
+    private String imageUrl;
     private Category category;
 
 }
