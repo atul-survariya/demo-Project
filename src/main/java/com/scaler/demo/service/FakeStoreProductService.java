@@ -3,15 +3,18 @@ package com.scaler.demo.service;
 import com.scaler.demo.dtos.FakeStoreCategoryDto;
 import com.scaler.demo.dtos.FakeStoreCreateProductDto;
 import com.scaler.demo.dtos.FakeStoreProductDto;
+import com.scaler.demo.exceptions.ProductNotFoundException;
 import com.scaler.demo.models.Category;
 import com.scaler.demo.models.Product;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -24,7 +27,7 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product getProductDetails(Long id) {
+    public Product getProductDetails (Long id) throws ProductNotFoundException{
 //      FakeStoreProductDto responseDto=
 //                restTemplate.getForObject(
 //                        "https://fakestoreapi.com/products/" + id,
@@ -39,6 +42,9 @@ public class FakeStoreProductService implements ProductService{
             // tell FE that BE is not working
         }
 
+        if(responseEntity.getBody() == null){
+            throw new ProductNotFoundException("Product Not Found");
+        }
         return responseEntity.getBody().toProduct();
     }
 
@@ -99,5 +105,19 @@ public class FakeStoreProductService implements ProductService{
             categories.add(category);
         }
         return categories;
+    }
+
+    public Product deleteProduct(Long id) {
+        ResponseEntity<FakeStoreProductDto> responseDto=
+                restTemplate.exchange("https://fakestoreapi.com/products/"+id,
+                HttpMethod.DELETE,null, FakeStoreProductDto.class);
+
+        if(responseDto.getStatusCode() ==HttpStatusCode.valueOf(400)){
+            //
+        }else if(responseDto.getStatusCode()==HttpStatusCode.valueOf(500)){
+            //
+        }
+
+        return responseDto.getBody().toProduct();
     }
 }
