@@ -7,6 +7,7 @@ import com.scaler.demo.repository.CategoryRepository;
 import com.scaler.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,16 +58,17 @@ public class DataBaseProductService implements ProductService{
 
     @Override
     public List<Product> getAllProducts() {
-        return List.of();
+        Sort sortDesc = Sort.by(Sort.Direction.DESC, "id");
+        return productRepository.findAll(sortDesc);
     }
 
     @Override
     public List<Category> getAllCategories() {
-        return List.of();
+        return categoryRepository.findAll();
     }
 
     @Override
     public Product deleteProduct(Long id) {
-        return null;
+        return productRepository.deleteProductById(id);
     }
 }
