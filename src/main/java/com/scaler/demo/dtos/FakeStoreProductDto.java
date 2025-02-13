@@ -3,9 +3,11 @@ package com.scaler.demo.dtos;
 import com.scaler.demo.models.Category;
 import com.scaler.demo.models.Product;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 @Getter
+@Setter
 @Service
 public class FakeStoreProductDto {
 

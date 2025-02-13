@@ -8,9 +8,7 @@ import com.scaler.demo.models.Category;
 import com.scaler.demo.models.Product;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+
 public class FakeStoreProductService implements ProductService{
 
     private RestTemplate restTemplate;
@@ -116,6 +115,37 @@ public class FakeStoreProductService implements ProductService{
             //
         }else if(responseDto.getStatusCode()==HttpStatusCode.valueOf(500)){
             //
+        }
+
+        return responseDto.getBody().toProduct();
+    }
+
+    @Override
+    public Product updateProduct(Long id,String title, String description, String image, double price, String category) {
+        FakeStoreProductDto requestDto=new FakeStoreProductDto();
+        requestDto.setId(id);
+        requestDto.setTitle(title);
+        requestDto.setDescription(description);
+        requestDto.setImage(image);
+        requestDto.setPrice(String.valueOf(price));
+        requestDto.setCategory(category);
+
+//        ResponseEntity<FakeStoreCreateProductDto> requestEntity= new ResponseEntity<>
+//                (requestDto, HttpStatusCode.valueOf(201));
+        //RequestEntity<FakeStoreCreateProductDto>ss= new RequestEntity<>(requestDto);
+
+        // how to wrap requestDto to requestEntity
+        //
+        //HttpHeaders header= new HttpHeaders();
+        //header.set("Content-Type", "application/json");
+
+        HttpEntity<FakeStoreProductDto> requestEntity= new HttpEntity<>(requestDto);
+
+        ResponseEntity<FakeStoreProductDto> responseDto=  restTemplate.exchange
+                ("https://fakestoreapi.com/products/7", HttpMethod.PUT, requestEntity, FakeStoreProductDto.class);
+
+        if(responseDto.getStatusCode() ==HttpStatusCode.valueOf(400)){
+            ///
         }
 
         return responseDto.getBody().toProduct();

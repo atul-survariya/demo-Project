@@ -61,6 +61,23 @@ public class ProductController {
         return responseEntity;
     }
 
+    @PutMapping("/updateproduct/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody CreateProductRequestDto requestDto) throws ProductNotFoundException{
+        Product product= productService.updateProduct(
+                id,
+                requestDto.getTitle(),
+                requestDto.getDescription(),
+                requestDto.getImage(),
+                requestDto.getPrice(),
+                requestDto.getCategory()
+
+        );
+
+        ResponseEntity<Product> responseEntity = new ResponseEntity<>(product, HttpStatusCode.valueOf(201));
+
+        return responseEntity;
+    }
+
 //    @ExceptionHandler(NullPointerException.class)
 //    public ResponseEntity<ErrorDto> handleNPException(){
 //        ErrorDto dto= new ErrorDto();

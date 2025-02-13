@@ -71,4 +71,34 @@ public class DataBaseProductService implements ProductService{
     public Product deleteProduct(Long id) {
         return productRepository.deleteProductById(id);
     }
+
+    @Override
+    public Product updateProduct(Long id,String title, String description, String image, double price, String category) throws ProductNotFoundException{
+    //in ProductRepository what will be name of method,,,,,,,if save() then how we will get id tru input url
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            Product productToUpdate = product.get();
+            productToUpdate.setTitle(title);
+            productToUpdate.setDescription(description);
+            productToUpdate.setImageUrl(image);
+            productToUpdate.setPrice(price);
+
+            Category categoryFromDataBase = categoryRepository.findByName(category);
+
+            //
+            if(category==null){
+                Category newCategory = new Category();
+                //newCategory.setName(categoryFromDataBase.getName());
+                newCategory.setName(productToUpdate.getCategory().getName());
+                productToUpdate.setCategory(newCategory);
+            }else {
+                Category newCategory = new Category();
+                newCategory.setName(category);
+                productToUpdate.setCategory(newCategory);
+            }
+            return productRepository.save(productToUpdate);
+        }else {
+            throw new ProductNotFoundException("This Product is not present");
+        }
+    }
 }
